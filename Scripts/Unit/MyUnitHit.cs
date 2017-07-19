@@ -9,7 +9,7 @@ using System.Collections;
 
 public class MyUnitHit : MonoBehaviour {
 
-	MyUnit cMyUnit;
+	Unit unit;
 
 	// Use this for initialization
 	void Start () {
@@ -23,12 +23,9 @@ public class MyUnitHit : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col){
 		if (col.tag == "EnemyUnitHitArea") {
-			cMyUnit =  gameObject.transform.parent.GetComponent<MyUnit>();
-			cMyUnit.TargetEnemyUnit = col.transform.parent.gameObject;
-			cMyUnit.inEnemyHitArea = true;
-
+			unit =  gameObject.transform.parent.GetComponent<Unit>(); // 自分の親オブジェクトのUnitクラス取得
+			unit.TargetEnemyUnit = col.transform.parent.gameObject; // 接触した相手の親（敵ユニット）を取得
+			unit.inEnemyHitArea = true;
 		}
-
 	}
-
 }

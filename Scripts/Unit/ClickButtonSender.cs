@@ -24,13 +24,14 @@ public class ClickButtonSender : MonoBehaviour {
 	public string targetName; // このボタンに対応しているユニットの名前
 
 	CurrentNameManage currentNameManage; // 現在なにが選択されているか管理するクラス
+	public GameObject CurrentNamemanager;
 
 	Text text;
 
 	void Start () {
 		UnitName = targetName;
 		text = GetComponentInChildren<Text> ();
-		currentNameManage = transform.parent.Find("CurrentNameManager").GetComponent<CurrentNameManage>(); // CurrentNameManagerオブジェクトからCurrentNameManageクラスをもってくる
+		currentNameManage = CurrentNamemanager.GetComponent<CurrentNameManage>(); // CurrentNameManagerオブジェクトからCurrentNameManageクラスをもってくる
 		MaxCount = 10;
 		UnitCount = 0;
 	}

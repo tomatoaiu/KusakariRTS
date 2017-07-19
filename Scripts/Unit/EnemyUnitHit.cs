@@ -3,7 +3,8 @@ using System.Collections;
 
 public class EnemyUnitHit : MonoBehaviour {
 
-	EnemyUnit cEnemyUnit;
+	Unit unit;
+
 
 	// Use this for initialization
 	void Start () {
@@ -16,16 +17,21 @@ public class EnemyUnitHit : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col){
-
+//		Debug.Log (col);
 		if (col.tag == "MyUnitHitArea") {
-			cEnemyUnit = gameObject.transform.parent.GetComponent<EnemyUnit> ();
-			cEnemyUnit.TargetEnemyUnit = col.transform.parent.gameObject;
-			cEnemyUnit.inEnemyHitArea = true;
+			
+			unit = gameObject.transform.parent.GetComponent<Unit> ();
+
+//			var units = gameObject.transform.parent.GetComponents<Unit> ();
+//			foreach(var a in units){
+//				Debug.Log (a);
+//			}
+
+//			Debug.Log (unit);
+			unit.TargetEnemyUnit = col.transform.parent.gameObject;
+			unit.inEnemyHitArea = true;
+//			Debug.Log (unit.inEnemyHitArea);
+
 		}
-
-
-			Debug.Log ("aiueo");
-
-
 	}
 }

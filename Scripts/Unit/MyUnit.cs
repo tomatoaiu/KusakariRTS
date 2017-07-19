@@ -1,87 +1,45 @@
-﻿/*
-
-unitクラスを継承
-自分のキャラクターの移動
-
-*/
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.AI;
 
-
+/**
+ * unitクラスを継承を
+ * 自軍のユニット
+ */
 public class MyUnit : Unit {
 
-	EnemyUnit cEnemyUnit;
-
-	void Start(){
-		agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-		inEnemyHitArea = false;
-		isDuringAttack = false;
-		MeterCreate ();
+	/**
+	 * <summary>敵ボスの情報を自分にインプット
+	 * </summary>
+	 * <param name="col">コライダー</param>
+	 */
+	protected void SetBossInformaiton(Collider col){
+		enemyBoss = col.gameObject;
+		agent.SetDestination (enemyBoss.transform.position);
+	}
+		
+	/**
+	 * <summary>敵ユニットの情報を自分にインプット
+	 * </summary>
+	 * <param name="col">コライダー</param>
+	 */
+	protected void SetUnitInformaiton(Collider col){
+		enemyUnit = col.gameObject;
+		agent.SetDestination (enemyUnit.transform.position);
 	}
 
-	void Update(){
-		MeterUpdate();
-
-
-		if (inEnemyHitArea) { // 自分と相手が戦える距離に入る
-			StartAttacking ();
+	/**
+	 * <summary>接敵したオブジェクトの取得
+	 * </summary>
+	 * <param name="col">コライダー</param>
+	 */
+	protected void StoreNearingEnemy(Collider col){
+		if (col.tag == "EnemyUnitHitArea") {
+			SetUnitInformaiton (col);
 		}
-	}
-
-	void OnTriggerEnter(Collider col){
-
-//		Debug.Log (unitName + "が検知したタグ : " + col.gameObject.tag);
-		if (col.tag == "EnemyCastle") {
-			enemyBoss = col.gameObject;
-			agent.SetDestination (enemyBoss.transform.position);
-
-		} else if (col.tag == "EnemyUnit") {
-			enemyUnit = col.gameObject;
-			agent.SetDestination (enemyUnit.transform.position);
-		}
-
-	}
-
-	void OnTriggerStay(Collider col){
-
-		if (isDuringAttack) {
-			return;
-		}
-		if (col.tag == "EnemyUnit") {
-			enemyUnit = col.gameObject;
-			agent.SetDestination (enemyUnit.transform.position);
-		} else if (col.tag == "EnemyCastle") {
-			enemyBoss = col.gameObject;
-			agent.SetDestination (enemyBoss.transform.position);
-
-		}
-	}
-
-	void StartAttacking(){
-		inEnemyHitArea = false;
-		cEnemyUnit = TargetEnemyUnit.GetComponent<EnemyUnit>();
-		agent.speed = 0;
-		StartCoroutine(attackTime());
-	}
-
-	IEnumerator attackTime(){
-		Debug.Log("attackTime" + cEnemyUnit);
-		isDuringAttack = true;
-		while (true) {
-			
-			if (cEnemyUnit != null && cEnemyUnit.life > 0) {
-				cEnemyUnit.life -= attackPoint;
-			} else {
-				agent.speed = unitSpeed;
-//				agent.SetDestination (enemyBoss.transform.position);
-				break;
-			}
-			yield return new WaitForSeconds (attackInterval); // 待つ
-		}
-		isDuringAttack = false;
+		targets.Add (col); // 接触した敵の情報を保存
 	}
 }
